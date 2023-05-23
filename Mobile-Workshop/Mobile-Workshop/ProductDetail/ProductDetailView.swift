@@ -13,14 +13,17 @@ struct ProductDetailView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            headerView
-            
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 20) {
-                    productImageView
-                    
+                    Image(systemName: "photo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 200, height: 250)
+                        .padding()
                     VStack(spacing: 16) {
                         HStack {
+                           
+                            
                             Text("Product Name")
                                 .font(.system(size: 18))
                                 .fontWeight(.bold)
@@ -75,9 +78,14 @@ struct ProductDetailView: View {
             
             Spacer()
         }
-        .background(Color.white.edgesIgnoringSafeArea(.all))
+        .toolbar{
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Image(systemName: "cart")
+            }
+        }
+        .navigationTitle("Product Details")
         .navigationBarBackButtonHidden()
-        
+        .background(Color.white.edgesIgnoringSafeArea(.all))
     }
     
     
@@ -97,14 +105,7 @@ struct ProductDetailView: View {
         .padding()
         .frame(maxWidth: .infinity) // Expand the HStack to fill the available space
     }
-    
-    var productImageView: some View {
-        Image(systemName: "photo")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 200, height: 250)
-            .padding()
-    }
+
 }
 
 struct ProductDetailPage_Previews: PreviewProvider {
