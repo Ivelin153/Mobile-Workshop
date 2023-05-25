@@ -11,7 +11,7 @@ import SwiftUI
 struct Mobile_WorkshopApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
     }
 }
