@@ -7,8 +7,11 @@
 import SwiftUI
 import Foundation
 import SwiftUI
+import Alamofire
 
 struct ProductDetailView: View {
+    private let repository = AuthorizationRepository()
+    private let networkingManager = NetworkManager()
     @State public var text: String = ""
     
     var body: some View {
@@ -22,8 +25,6 @@ struct ProductDetailView: View {
                         .padding()
                     VStack(spacing: 16) {
                         HStack {
-                           
-                            
                             Text("Product Name")
                                 .font(.system(size: 18))
                                 .fontWeight(.bold)
@@ -59,6 +60,10 @@ struct ProductDetailView: View {
                         Spacer()
                         
                         Button(action: {
+                            Task {
+                                await login()
+                            }
+                            
                         }) {
                             Text("Add to cart")
                                 .font(.headline)
@@ -71,7 +76,6 @@ struct ProductDetailView: View {
                         
                     }
                     .padding()
-                    
                 }
                 .padding(.vertical)
             }
@@ -89,23 +93,25 @@ struct ProductDetailView: View {
     }
     
     
-    var headerView: some View {
-        HStack {
-            Spacer()
+    private func login() async {
+        do {
+            let url = "https://ethereal-artefacts.fly.dev/api/auth/local"
             
-            Text("Product Details")
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center) // Align the text in the center
+            let parameters: Parameters = [
+                "identifier": "test@test.com",
+                "password": "test123"
+            ]
+            let responseModel: Authorization = try await networkingManager.request(url, method: .post, parameters: parameters)
             
-            Spacer()
+            print(responseModel)
             
-            Image(systemName: "cart")
-                .font(.title)
         }
-        .padding()
-        .frame(maxWidth: .infinity) // Expand the HStack to fill the available space
+        catch{
+            print(String(describing: error)) // <- ✅ Use this for debuging!
+            
+            print("Error: \(error.localizedDescription)")
+        }
     }
-
 }
 
 struct ProductDetailPage_Previews: PreviewProvider {
