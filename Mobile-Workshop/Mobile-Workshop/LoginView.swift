@@ -8,12 +8,13 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var path: [String] = []
-    @State private var email: String = ""
-    @State private var password: String = ""
-    @State private var isEmailValid = true
-    @State private var isPasswordVisible = false
-    @State private var isLoginValid = false
+    @StateObject var loginModel: LoginViewModel = LoginViewModel()
+    
+    
+    @State private var isPasswordVisible = false;
+    @State private var isEmailValid = true;
+    
+    @State private var path: [String] = [];
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -29,22 +30,21 @@ struct LoginView: View {
                         .frame(width: 200, height: 200)
                         .padding(.bottom, 40)
                     
-                    TextField("Email", text: $email, onEditingChanged: { isEditing in
-                        if !isEditing {
-                            self.isEmailValid = self.isValidEmail(email)
+                    TextField("Email", text: $loginModel.email)
+                        .padding()
+                        .autocapitalization(.none)
+                        .background(isEmailValid ? Color.white : Color.red)
+                        .cornerRadius(5.0)
+                        .padding(.bottom, 20)
+                        .onChange(of: loginModel.email) {value in
+                            self.isEmailValid = loginModel.isValidEmail(value)
                         }
-                    })
-                    .padding()
-                    .autocapitalization(.none)
-                    .background(isEmailValid ? Color.white : Color.red)
-                    .cornerRadius(5.0)
-                    .padding(.bottom, 20)
                     
                     HStack {
                         if isPasswordVisible {
-                            TextField("Password", text: $password)
+                            TextField("Password", text: $loginModel.password)
                         } else {
-                            SecureField("Password", text: $password)
+                            SecureField("Password", text: $loginModel.password)
                         }
                         Button(action: {
                             self.isPasswordVisible.toggle()
@@ -57,47 +57,38 @@ struct LoginView: View {
                     .background(Color.white)
                     .cornerRadius(5.0)
                     .padding(.bottom, 20)
-                    Button(action: {
-                        
-                        if self.email == "ivelin@gmail.com" && self.password == "password" {
-                            // Perform login action
-                            self.isLoginValid = true
-                            path.append("Login success")
-
-                        } else {
-                            self.isLoginValid = false
-                        }
-                        
-                        password = ""
-                    }, label: {
+                    Button(action: loginModel.login) {
                         HStack{
                             Text("Log in")
                                 .font(.headline)
                                 .foregroundColor(.white)
                                 .padding()
                                 .frame(width: 220, height: 60)
-                                .background(Color.init(red: 71/255, green: 51/255, blue: 122/255))
+                                .background(loginModel.isLogInButtonDisabled() ? .gray : Color.init(red: 71/255, green: 51/255, blue: 122/255))
                                 .cornerRadius(15.0)
                         }
-                    })
-                    .navigationDestination(for: String.self, destination: {text in ProductDetailView(text: text)})
+                    }
+                    .disabled(loginModel.isLogInButtonDisabled() || !self.isEmailValid)
+                    .navigationDestination(isPresented: $loginModel.isLoginValid, destination: {ProductDetailView()})
                     
-                    if !isLoginValid {
+                    if !loginModel.isLoginValid {
                         Text("Invalid email or password")
                             .foregroundColor(.red)
                             .padding(.top, 10)
                     }
+                    
+                }
+                .alert(isPresented: $loginModel.showError) {
+                    Alert(title: Text("Login Failed"),
+                          message: Text("Your email or password is incorrect. Please try again."),
+                          dismissButton: .default(Text("OK")))
                 }
                 .padding()
             }
         }
     }
     
-    private func isValidEmail(_ email: String) -> Bool {
-        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-        return emailPredicate.evaluate(with: email)
-    }
+    
 }
 
 struct LoginView_Previews: PreviewProvider {

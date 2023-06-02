@@ -1,5 +1,5 @@
 //
-//  Authorization.swift
+//  LoginModel.swift
 //  Mobile-Workshop
 //
 //  Created by iOS Dev on 24.05.23.
@@ -7,16 +7,16 @@
 
 import Foundation
 
-struct Authorization: Codable {
+struct LoginResponse: Codable {
     let jwt: String
     let user: User
 }
 
 struct User: Codable {
-    let id: Int
-    let username: String
     let email: String
-    let provider: String
-    let confirmend: Bool
-    let blocked: Bool
+}
+
+struct LoginRequest: Encodable {
+    let identifier: String
+    let password: String
 }

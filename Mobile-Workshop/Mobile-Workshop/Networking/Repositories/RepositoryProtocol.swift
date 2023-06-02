@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 protocol RepositoryProtocol {
-    func authorize() async throws -> Authorization
+    func login(request: LoginRequest) async throws -> LoginResponse
 }
