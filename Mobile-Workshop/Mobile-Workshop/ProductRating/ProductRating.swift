@@ -15,20 +15,21 @@ struct ProductRating: View {
     var body: some View {
         HStack(spacing: 2) {
             Text("\(rating)")
-            .font(.headline)
-            .bold()
+                .font(.headline)
+                .bold()
             
             ForEach(1...maxRating, id: \.self) { index in
                 Image(systemName: index <= rating ? "star.fill" : "star")
                     .resizable()
                     .frame(width: 12,height: 12)
-                    .foregroundColor(Color("Textcolor"))            }
+                    .foregroundColor(.yellow)
+            }
         }
     }
 }
 
-struct Rating_Previews: PreviewProvider {
+struct ProductRating_Previews: PreviewProvider {
     static var previews: some View {
-        ProductRating(rating: 1)
+        ProductRating(rating: 2)
     }
 }

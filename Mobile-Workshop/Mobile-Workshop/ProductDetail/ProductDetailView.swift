@@ -44,27 +44,24 @@ struct ProductDetailView: View {
                                 Spacer()
                                 
                                 HStack(spacing: 0) {
-                                    Text("5")
-                                    ForEach(0..<5) { _ in
-                                        Image(systemName: "star.fill")
-                                            .foregroundColor(.yellow)
-                                            .font(.system(size: 14))
-                                    }
+                                    ProductRating(rating: product.rating)
+                                        .padding(.trailing)
                                 }
                             }
                             
                             HStack {
-                                Text("Category: Home")
+                                Text("Category: \(product.category)")
                                     .font(.system(size: 12))
                                     .foregroundColor(Color.gray)
                                     .fontWeight(.semibold)
                                 Spacer()
                             }
-                            Text("Indulge in a heavenly tea experience with our Stargazer’s Tea Set, featuring a constellation-themed teapot and matching teacups. Crafted from fine porcelain, this elegant set will transport you to the cosmos with every sip.")
+                            
+                            Text(product.description)
                                 .multilineTextAlignment(.leading)
                                 .font(.system(size: 16))
                             
-                            Text("$99.99")
+                            Text(String(format: "$%.2f", Double(product.price)))
                                 .multilineTextAlignment(.leading)
                                 .font(.system(size: 24))
                                 .frame(maxWidth: .infinity, alignment: .leading)

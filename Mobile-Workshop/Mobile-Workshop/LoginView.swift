@@ -10,10 +10,8 @@ import SwiftUI
 struct LoginView: View {
     @StateObject var loginModel: LoginViewModel = LoginViewModel()
     
-    
     @State private var isPasswordVisible = false;
     @State private var isEmailValid = true;
-    
     @State private var path: [String] = [];
     
     var body: some View {
@@ -57,6 +55,7 @@ struct LoginView: View {
                     .background(Color.white)
                     .cornerRadius(5.0)
                     .padding(.bottom, 20)
+                    
                     Button(action: loginModel.login) {
                         HStack{
                             Text("Log in")
@@ -76,7 +75,6 @@ struct LoginView: View {
                             .foregroundColor(.red)
                             .padding(.top, 10)
                     }
-                    
                 }
                 .alert(isPresented: $loginModel.showError) {
                     Alert(title: Text("Login Failed"),
